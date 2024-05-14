@@ -4,6 +4,7 @@ from flask import Flask
 from model import db_service, car
 from model.reservation import *
 from repository import CarRepository
+from controller import CarController
 
 app = Flask(__name__)
 
@@ -31,14 +32,7 @@ def mock_json_repr():
 if __name__ == '__main__':
     # with app.app_context():
     #     car_repo = CarRepository(db_manager=db_service)
-    #     kwargs = {
-    #         "model": "Enzo",
-    #         "brand": "Ferrari",
-    #         "year": 2015,
-    #         "price": 3e5,
-    #         "image": b"0xFF",
-    #         "status": car.CarStatus.RESERVED,
-    #         "mode": car.CarMode.BUSINESS,
-    #     }
-    #     car_repo.delete_entity(7)
+    #     car_controller = CarController(car_repository=car_repo)
+    #     response = car_controller.get_all_entities()
+    #     print(f"Response: {response.data}")
     app.run()
