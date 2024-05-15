@@ -12,30 +12,54 @@ class CarRepository(BasicRepository):
         self.__db_manager = db_manager
 
     def get_all_entities(self) -> List[Car] | None:
-        return self.__db_manager.session.query(Car).all()
+        try:
+            return self.__db_manager.session.query(Car).all()
+        except Exception as e:
+            print(f"Error when getting all cars:\n{e}")
+            return None
 
     def get_entity_by_id(self, entity_id: int) -> Car | None:
-        return self.__db_manager.session.get(entity=Car, ident=entity_id)
+        try:
+            return self.__db_manager.session.get(entity=Car, ident=entity_id)
+        except Exception as e:
+            print(f"Error when getting car with id {entity_id}:\n{e}")
+            return None
 
-    def add_entity(self, **kwargs) -> None:
-        car = Car(
-            **kwargs
-        )
-        print(car)
-        self.__db_manager.session.add(car)
-        self.__db_manager.session.commit()
+    def add_entity(self, **kwargs) -> int:
+        try:
+            car = Car(
+                **kwargs
+            )
+            print(car)
+            self.__db_manager.session.add(car)
+            self.__db_manager.session.commit()
+            return 1
+        except Exception as e:
+            print(f"Error adding car:\n{e}")
+            return 0
 
-    def update_entity(self, entity_id: int, **kwargs) -> None:
+    def update_entity(self, entity_id: int, **kwargs) -> int:
         car = self.__db_manager.session.get(entity=Car, ident=entity_id)
-        if car:
+        if not car:
+            return -1
+        try:
             for key, value in kwargs.items():
                 setattr(car, key, value)
             print(car)
             self.__db_manager.session.commit()
+            return 1
+        except Exception as e:
+            print(f"Error when updating car with id {entity_id}:\n{e}")
+            return 0
 
-    def delete_entity(self, entity_id: int) -> None:
+    def delete_entity(self, entity_id: int) -> int:
         car = self.__db_manager.session.get(entity=Car, ident=entity_id)
-        print(car)
-        if car:
+        if not car:
+            return -1
+        try:
             self.__db_manager.session.delete(car)
             self.__db_manager.session.commit()
+            return 1
+        except Exception as e:
+            print(f"Error when deleting car with id {entity_id}:\n{e}")
+            return 0
