@@ -4,6 +4,7 @@ from controller.basic_controller import BasicController
 from repository import CarRepository
 from flask import Response
 from http import HTTPStatus
+from constants import OperationStatus
 
 
 class CarController(BasicController):
@@ -26,25 +27,25 @@ class CarController(BasicController):
 
     def add_entity(self, **kwargs) -> Response:
         operation_status = self.__repository.add_entity(**kwargs)
-        if operation_status == 1:
+        if operation_status == OperationStatus.SUCCESS:
             return Response(response="Successfully added car!", status=HTTPStatus(201))
-        if operation_status == 0:
+        if operation_status == OperationStatus.ERROR:
             return Response(response="An error occurred when adding new car. Try again later.", status=HTTPStatus(400))
 
     def update_entity(self, entity_id: int, **kwargs) -> Response:
         operation_status = self.__repository.update_entity(entity_id=entity_id, **kwargs)
-        if operation_status == 1:
+        if operation_status == OperationStatus.SUCCESS:
             return Response(response="Successfully updated car!", status=HTTPStatus(200))
-        if operation_status == 0:
+        if operation_status == OperationStatus.ERROR:
             return Response(response="An error occurred when updating car. Try again later.", status=HTTPStatus(400))
-        if operation_status == -1:
+        if operation_status == OperationStatus.NOT_FOUND:
             return Response(response="That car does not exist.", status=HTTPStatus(404))
 
     def delete_entity(self, entity_id: int) -> Response:
         operation_status = self.__repository.delete_entity(entity_id=entity_id)
-        if operation_status == 1:
+        if operation_status == OperationStatus.SUCCESS:
             return Response(response="Successfully deleted car!", status=HTTPStatus(200))
-        if operation_status == 0:
+        if operation_status == OperationStatus.ERROR:
             return Response(response="An error occurred when deleting car. Try again later.", status=HTTPStatus(400))
-        if operation_status == -1:
+        if operation_status == OperationStatus.NOT_FOUND:
             return Response(response="That car does not exist.", status=HTTPStatus(404))

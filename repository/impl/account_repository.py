@@ -4,6 +4,7 @@ import flask_sqlalchemy
 
 from repository.basic_repository import BasicRepository
 from model.account import Account
+from constants import OperationStatus
 
 
 class AccountRepository(BasicRepository):
@@ -25,7 +26,7 @@ class AccountRepository(BasicRepository):
             print(f"Error when getting account with id {entity_id}:\n{e}")
             return None
 
-    def add_entity(self, **kwargs) -> int:
+    def add_entity(self, **kwargs) -> OperationStatus:
         try:
             account = Account(
                 **kwargs
@@ -33,33 +34,33 @@ class AccountRepository(BasicRepository):
             print(account)
             self.__db_manager.session.add(account)
             self.__db_manager.session.commit()
-            return 1
+            return OperationStatus.SUCCESS
         except Exception as e:
             print(f"Error adding account:\n{e}")
-            return 0
+            return OperationStatus.ERROR
 
-    def update_entity(self, entity_id: int, **kwargs) -> int:
+    def update_entity(self, entity_id: int, **kwargs) -> OperationStatus:
         account = self.__db_manager.session.get(entity=Account, ident=entity_id)
         if not account:
-            return -1
+            return OperationStatus.NOT_FOUND
         try:
             for key, value in kwargs.items():
                 setattr(account, key, value)
             print(account)
             self.__db_manager.session.commit()
-            return 1
+            return OperationStatus.SUCCESS
         except Exception as e:
             print(f"Error when updating account with id {entity_id}:\n{e}")
-            return 0
+            return OperationStatus.ERROR
 
-    def delete_entity(self, entity_id: int) -> int:
+    def delete_entity(self, entity_id: int) -> OperationStatus:
         account = self.__db_manager.session.get(entity=Account, ident=entity_id)
         if not account:
-            return -1
+            return OperationStatus.NOT_FOUND
         try:
             self.__db_manager.session.delete(account)
             self.__db_manager.session.commit()
-            return 1
+            return OperationStatus.SUCCESS
         except Exception as e:
             print(f"Error when deleting account with id {entity_id}:\n{e}")
-            return 0
+            return OperationStatus.ERROR

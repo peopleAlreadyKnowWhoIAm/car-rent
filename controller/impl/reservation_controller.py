@@ -4,6 +4,7 @@ from controller.basic_controller import BasicController
 from repository import ReservationRepository
 from flask import Response
 from http import HTTPStatus
+from constants import OperationStatus
 
 
 class ReservationController(BasicController):
@@ -26,25 +27,25 @@ class ReservationController(BasicController):
 
     def add_entity(self, **kwargs) -> Response:
         operation_status = self.__repository.add_entity(**kwargs)
-        if operation_status == 1:
+        if operation_status == OperationStatus.SUCCESS:
             return Response(response="Successfully added reservation!", status=HTTPStatus(201))
-        if operation_status == 0:
+        if operation_status == OperationStatus.ERROR:
             return Response(response="An error occurred when adding new reservation. Try again later.", status=HTTPStatus(400))
 
     def update_entity(self, entity_id: int, **kwargs) -> Response:
         operation_status = self.__repository.update_entity(entity_id=entity_id, **kwargs)
-        if operation_status == 1:
+        if operation_status == OperationStatus.SUCCESS:
             return Response(response="Successfully updated reservation!", status=HTTPStatus(200))
-        if operation_status == 0:
+        if operation_status == OperationStatus.ERROR:
             return Response(response="An error occurred when updating reservation. Try again later.", status=HTTPStatus(400))
-        if operation_status == -1:
+        if operation_status == OperationStatus.NOT_FOUND:
             return Response(response="That reservation does not exist.", status=HTTPStatus(404))
 
     def delete_entity(self, entity_id: int) -> Response:
         operation_status = self.__repository.delete_entity(entity_id=entity_id)
-        if operation_status == 1:
+        if operation_status == OperationStatus.SUCCESS:
             return Response(response="Successfully deleted reservation!", status=HTTPStatus(200))
-        if operation_status == 0:
+        if operation_status == OperationStatus.ERROR:
             return Response(response="An error occurred when deleting reservation. Try again later.", status=HTTPStatus(400))
-        if operation_status == -1:
+        if operation_status == OperationStatus.NOT_FOUND:
             return Response(response="That reservation does not exist.", status=HTTPStatus(404))
