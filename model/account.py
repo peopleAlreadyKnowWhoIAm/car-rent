@@ -7,8 +7,13 @@ class AccountPrivilege(enum.Enum):
     COMMON = 1
     PRIVILEDGED = 2
 
-class Account(model.db.Model):
+class Account(model.db_service.Model):
     __tablename__ = 'account'
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     first_name: Mapped[str] = mapped_column(String(80))

@@ -14,8 +14,12 @@ class CarMode(enum.Enum):
     VINTAGE = 3
     BUSINESS = 4
 
-class Car(model.db.Model):
+class Car(model.db_service.Model):
     __tablename__ = 'car'
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     model: Mapped[str] = mapped_column(String(80))

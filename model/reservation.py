@@ -17,8 +17,12 @@ class ReservationStatus(enum.Enum):
     WAITING_PAYMENT = 5
     COMPLETED = 6
 
-class Reservation(model.db.Model):
+class Reservation(model.db_service.Model):
     __tablename__ = 'reservation'
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     status: Mapped[ReservationStatus] = mapped_column(Enum(ReservationStatus))
