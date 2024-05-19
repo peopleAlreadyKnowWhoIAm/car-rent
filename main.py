@@ -14,4 +14,6 @@ app.register_blueprint(reservation_view.reservation_blueprint)
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db_service.create_all()
     app.run()

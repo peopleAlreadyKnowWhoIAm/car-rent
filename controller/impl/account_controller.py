@@ -49,3 +49,12 @@ class AccountController(BasicController):
             return Response(response="An error occurred when deleting account. Try again later.", status=HTTPStatus(400))
         if operation_status == OperationStatus.NOT_FOUND:
             return Response(response="That account does not exist.", status=HTTPStatus(404))
+
+    def check_entity(self, email: str, password: str):
+        reg_acc = self.__repository.get_entity_by_email(email)
+        if reg_acc is None:
+            return Response(status=HTTPStatus.NOT_FOUND, response="Email not registered")
+        if reg_acc.password != password:
+            return Response(status=HTTPStatus.UNAUTHORIZED, response="Wrong password")
+        data = json.dumps(reg_acc.to_dict())
+        return Response(status=HTTPStatus.OK, response=data)

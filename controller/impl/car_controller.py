@@ -24,6 +24,13 @@ class CarController(BasicController):
             return Response(response=f"No car with id={entity_id} found", status=HTTPStatus(404))
         data = json.dumps(car.to_dict())
         return Response(response=data, status=HTTPStatus(200))
+    
+    def get_entity_image_by_id(self, entity_id: int) -> Response:
+        car = self.__repository.get_entity_by_id(entity_id=entity_id)
+        if not car:
+            return Response(response=f"No car with id={entity_id} found", status=HTTPStatus(404))
+        data = car.image
+        return Response(response=data, status=HTTPStatus(200))
 
     def add_entity(self, **kwargs) -> Response:
         operation_status = self.__repository.add_entity(**kwargs)

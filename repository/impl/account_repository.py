@@ -64,3 +64,6 @@ class AccountRepository(BasicRepository):
         except Exception as e:
             print(f"Error when deleting account with id {entity_id}:\n{e}")
             return OperationStatus.ERROR
+
+    def get_entity_by_email(self, email: str) -> Account | None:
+        return self.__db_manager.session.execute(self.__db_manager.select(Account).filter_by(email=email)).scalar_one_or_none()
