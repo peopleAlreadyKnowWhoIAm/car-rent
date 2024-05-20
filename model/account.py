@@ -18,9 +18,9 @@ class Account(model.db_service.Model):
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     first_name: Mapped[str] = mapped_column(String(80))
     last_name: Mapped[str] = mapped_column(String(80))
-    email: Mapped[str] = mapped_column(String(80))
+    email: Mapped[str] = mapped_column(String(80), unique=True)
     password: Mapped[bytes] = mapped_column(String(64))
-    privilege_level: Mapped[AccountPrivilege] = mapped_column(Enum(AccountPrivilege))
+    privilege_level: Mapped[AccountPrivilege] = mapped_column(Enum(AccountPrivilege), default=AccountPrivilege.COMMON)
 
     def to_dict(self) -> dict[str]:
         return {

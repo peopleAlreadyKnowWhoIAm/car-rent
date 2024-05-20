@@ -25,7 +25,7 @@ class Reservation(model.db_service.Model):
             setattr(self, key, value)
 
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
-    status: Mapped[ReservationStatus] = mapped_column(Enum(ReservationStatus))
+    status: Mapped[ReservationStatus] = mapped_column(Enum(ReservationStatus), default=ReservationStatus.WAITING_CONFIRMATION)
     start_date: Mapped[datetime.datetime]
     end_date: Mapped[datetime.datetime]
     expected_profit: Mapped[float]

@@ -1,7 +1,7 @@
 import sqlalchemy.orm
 import flask_sqlalchemy
 
-class DbBase(sqlalchemy.orm.DeclarativeBase, sqlalchemy.orm.MappedAsDataclass):
+class DbBase(sqlalchemy.orm.DeclarativeBase, sqlalchemy.orm.MappedAsDataclass, kw_only=True):
     pass
 
 db_service = flask_sqlalchemy.SQLAlchemy(model_class=DbBase)

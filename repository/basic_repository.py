@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from constants import ABCSingletonMeta
 
 
-class BasicRepository(ABC):
+class BasicRepository(ABC, metaclass=ABCSingletonMeta):
     @abstractmethod
     def get_all_entities(self):
         pass
