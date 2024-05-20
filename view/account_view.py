@@ -26,7 +26,7 @@ def add_account():
     account_data = request.json
     try:
         return account_controller.add_entity(first_name=account_data['first_name'], last_name=account_data['last_name'], password=account_data['password'], email=account_data['email'])
-    except:
+    except Exception as e:
         return Response(status=HTTPStatus.BAD_REQUEST, response='Wrong parameters') 
 
 @account_blueprint.route('/accounts/update/<int:account_id>', methods=['PUT'])
@@ -43,5 +43,5 @@ def delete_account(account_id):
 def login_account():
     account_creds = request.json
     if 'email' not in account_creds or 'password' not in account_creds:
-        return Response(status=HTTPStatus.BAD_REQUEST, response="Wrong body")
+        return Response(status=HTTPStatus.BAD_REQUEST, response="You must provide email and password for login")
     return account_controller.check_entity(email=account_creds['email'], password=account_creds['password'])

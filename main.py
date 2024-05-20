@@ -12,8 +12,7 @@ app.register_blueprint(account_view.account_blueprint)
 app.register_blueprint(car_view.car_blueprint)
 app.register_blueprint(reservation_view.reservation_blueprint)
 
-
 if __name__ == '__main__':
     with app.app_context():
         db_service.create_all()
-    app.run()
+    app.run(port=5000, host='0.0.0.0')
