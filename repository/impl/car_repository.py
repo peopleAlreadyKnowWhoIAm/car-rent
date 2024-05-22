@@ -64,3 +64,24 @@ class CarRepository(BasicRepository):
         except Exception as e:
             print(f"Error when deleting car with id {entity_id}:\n{e}")
             return OperationStatus.ERROR
+
+    def get_filtered_entities(self, **kwargs) -> List[Car] | None:
+
+        try:
+            cars = self.__db_manager.session.query(Car).all()
+        except Exception as e:
+            print(f"Error when getting all cars:\n{e}")
+            return None
+        if "mode" in kwargs.keys():
+            cars = filter(lambda car: car.mode.lower() == kwargs["mode"].lower(), cars)
+        if "status" in kwargs.keys():
+            cars = filter(lambda car: car.status.lower() == kwargs["status"].lower(), cars)
+        if "year_min" in kwargs.keys():
+            cars = filter(lambda car: car.year >= int(kwargs["year_min"]), cars)
+        if "year_max" in kwargs.keys():
+            cars = filter(lambda car: car.year <= int(kwargs["year_max"]), cars)
+        if "price_min" in kwargs.keys():
+            cars = filter(lambda car: car.price >= int(kwargs["price_min"]), cars)
+        if "price_max" in kwargs.keys():
+            cars = filter(lambda car: car.price <= int(kwargs["price_max"]), cars)
+        return cars

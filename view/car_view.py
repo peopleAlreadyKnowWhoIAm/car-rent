@@ -12,12 +12,16 @@ car_blueprint = Blueprint('car_blueprint', __name__)
 
 @car_blueprint.route('/api/cars', methods=['GET'])
 def get_all_cars():
+    filters = request.args.to_dict()
+    if filters:
+        return car_controller.get_filtered_entities(**filters)
     return car_controller.get_all_entities()
 
 
 @car_blueprint.route('/api/cars/<int:car_id>', methods=['GET'])
 def get_car_by_id(car_id):
     return car_controller.get_entity_by_id(entity_id=car_id)
+
 
 @car_blueprint.route('/api/cars/image/<int:car_id>', methods=['GET'])
 def get_car_image_by_id(car_id):

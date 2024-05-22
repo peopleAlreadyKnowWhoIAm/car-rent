@@ -25,9 +25,11 @@ def get_account_by_id(account_id):
 def add_account():
     account_data = request.json
     try:
-        return account_controller.add_entity(first_name=account_data['first_name'], last_name=account_data['last_name'], password=account_data['password'], email=account_data['email'])
+        return account_controller.add_entity(first_name=account_data['first_name'], last_name=account_data['last_name'],
+                                             password=account_data['password'], email=account_data['email'])
     except Exception as e:
-        return Response(status=HTTPStatus.BAD_REQUEST, response='Wrong parameters') 
+        return Response(status=HTTPStatus.BAD_REQUEST, response='Wrong parameters')
+
 
 @account_blueprint.route('/accounts/update/<int:account_id>', methods=['PUT'])
 def update_account(account_id):
@@ -38,6 +40,7 @@ def update_account(account_id):
 @account_blueprint.route('/accounts/delete/<int:account_id>', methods=['DELETE'])
 def delete_account(account_id):
     return account_controller.delete_entity(entity_id=account_id)
+
 
 @account_blueprint.put('/api/accounts/login')
 def login_account():
