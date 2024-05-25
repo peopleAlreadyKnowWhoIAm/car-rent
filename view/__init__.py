@@ -1,4 +1,4 @@
-# Import views
-import view.account_view
-import view.car_view
-import view.reservation_view
+# Import blueprints from views
+from view.account_view import create_account_blueprint
+from view.car_view import create_car_blueprint
+from view.reservation_view import create_reservation_blueprint
