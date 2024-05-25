@@ -17,6 +17,7 @@ class ReservationStatus(enum.Enum):
     WAITING_PAYMENT = 5
     COMPLETED = 6
 
+
 class Reservation(model.db_service.Model):
     __tablename__ = 'reservation'
 

@@ -85,3 +85,11 @@ class CarRepository(BasicRepository):
         if "price_max" in kwargs.keys():
             cars = filter(lambda car: car.price <= int(kwargs["price_max"]), cars)
         return cars
+
+    def get_most_expensive_cars(self, limit=3):
+        cars = self.__db_manager.session.query(Car).order_by(Car.price.desc()).limit(limit).all()
+        return cars
+
+    def get_cheapest_cars(self, limit=3):
+        cars = self.__db_manager.session.query(Car).order_by(Car.price.asc()).limit(limit).all()
+        return cars
