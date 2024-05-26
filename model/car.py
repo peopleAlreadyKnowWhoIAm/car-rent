@@ -26,7 +26,7 @@ class Car(model.db_service.Model):
     brand: Mapped[str] = mapped_column(String(32))
     year: Mapped[int]
     price: Mapped[float]
-    image: Mapped[bytes] = mapped_column(LargeBinary(), repr=False)
+    image: Mapped[str] = mapped_column(String(255))
     status: Mapped[CarStatus] = mapped_column(Enum(CarStatus))
     mode: Mapped[CarMode] = mapped_column(Enum(CarMode))
 
@@ -38,5 +38,6 @@ class Car(model.db_service.Model):
             'year': self.year,
             'price': self.price,
             'status': self.status.name,
-            'mode': self.mode.name
+            'mode': self.mode.name,
+            'image': self.image,
         }

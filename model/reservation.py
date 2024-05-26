@@ -16,6 +16,7 @@ class ReservationStatus(enum.Enum):
     WAITING_CHECK = 4
     WAITING_PAYMENT = 5
     COMPLETED = 6
+    CANCELED = 7
 
 
 class Reservation(model.db_service.Model):
