@@ -3,7 +3,7 @@ from typing import List
 import flask_sqlalchemy
 
 from repository.basic_repository import BasicRepository
-from model.car import Car
+from model.car import Car, CarMode, CarStatus
 from constants import OperationStatus
 
 
@@ -64,3 +64,34 @@ class CarRepository(BasicRepository):
         except Exception as e:
             print(f"Error when deleting car with id {entity_id}:\n{e}")
             return OperationStatus.ERROR
+
+    def get_filtered_entities(self, **kwargs) -> List[Car] | None:
+        try:
+            cars = self.__db_manager.session.query(Car).all()
+        except Exception as e:
+            print(f"Error when getting all cars:\n{e}")
+            return None
+        if "mode" in kwargs:
+            cars = filter(lambda car: car.mode == CarMode[kwargs["mode"].upper()], cars)
+        if "status" in kwargs:
+            cars = filter(lambda car: car.status == CarStatus[kwargs["status"].upper()], cars)
+        if "year_from" in kwargs:
+            cars = filter(lambda car: car.year >= int(kwargs["year_from"]), cars)
+        if "year_to" in kwargs:
+            cars = filter(lambda car: car.year <= int(kwargs["year_to"]), cars)
+        if "price_from" in kwargs:
+            cars = filter(lambda car: car.price >= int(kwargs["price_from"]), cars)
+        if "price_to" in kwargs:
+            cars = filter(lambda car: car.price <= int(kwargs["price_to"]), cars)
+        if "search" in kwargs:
+            search_query = kwargs["search"].lower()
+            cars = filter(lambda car: search_query in car.model.lower() or search_query in car.brand.lower(), cars)
+        return cars
+
+    def get_most_expensive_cars(self, limit=3):
+        cars = self.__db_manager.session.query(Car).order_by(Car.price.desc()).limit(limit).all()
+        return cars
+
+    def get_cheapest_cars(self, limit=3):
+        cars = self.__db_manager.session.query(Car).order_by(Car.price.asc()).limit(limit).all()
+        return cars

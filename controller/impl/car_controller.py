@@ -24,7 +24,7 @@ class CarController(BasicController):
             return Response(response=f"No car with id={entity_id} found", status=HTTPStatus(404))
         data = json.dumps(car.to_dict())
         return Response(response=data, status=HTTPStatus(200))
-    
+
     def get_entity_image_by_id(self, entity_id: int) -> Response:
         car = self.__repository.get_entity_by_id(entity_id=entity_id)
         if not car:
@@ -56,3 +56,10 @@ class CarController(BasicController):
             return Response(response="An error occurred when deleting car. Try again later.", status=HTTPStatus(400))
         if operation_status == OperationStatus.NOT_FOUND:
             return Response(response="That car does not exist.", status=HTTPStatus(404))
+
+    def get_filtered_entities(self, **kwargs):
+        cars = self.__repository.get_filtered_entities(**kwargs)
+        # if not cars:
+        #     return Response(response="No cars found", status=HTTPStatus(404))
+        data = json.dumps([car.to_dict() for car in cars])
+        return Response(response=data, status=HTTPStatus(200))

@@ -4,7 +4,11 @@ from flask import Blueprint, Response, request
 
 def create_account_blueprint(account_controller):
     account_blueprint = Blueprint('account_blueprint', __name__)
-    
+
+    @account_blueprint.route('/accounts', methods=['GET'])
+    def get_all_accounts():
+        return account_controller.get_all_entities()
+
     @account_blueprint.route("/api/accounts/add", methods=["POST"])
     def add_account():
         account_data = request.json

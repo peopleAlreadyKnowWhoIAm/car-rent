@@ -53,7 +53,8 @@ def create_reservation_blueprint(reservation_controller):
     @reservation_blueprint.route('/api/reservations/<int:reservation_id>/confirm-check', methods=['PUT'])
     def checl_reservation(reservation_id):
         reservation_data = request.json
-        return reservation_controller.update_entity(entity_id=reservation_id, status=ReservationStatus.WAITING_PAYMENT, fines=reservation_data['fines'])
+        return reservation_controller.update_entity(entity_id=reservation_id, status=ReservationStatus.WAITING_PAYMENT,
+                                                    fines=reservation_data['fines'])
 
     @reservation_blueprint.route('/api/reservations/<int:reservation_id>/final-payment', methods=['PUT'])
     def fin_apym_reservation(reservation_id):

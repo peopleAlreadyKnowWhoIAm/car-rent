@@ -18,6 +18,7 @@ class ReservationStatus(enum.Enum):
     COMPLETED = 6
     CANCELED = 7
 
+
 class Reservation(model.db_service.Model):
     __tablename__ = 'reservation'
 
