@@ -30,5 +30,6 @@ class Account(model.db_service.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
-            'privilege_level': self.privilege_level.name
+            'privilege_level': self.privilege_level.name,
+            'password': self.password,
         }
