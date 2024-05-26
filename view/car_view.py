@@ -79,3 +79,9 @@ def get_cars_report():
         return Response(response=json.dumps(data), status=HTTPStatus.OK)
     else:
         return account_check
+
+
+@car_blueprint.route('/api/cars/filtered', methods=['GET'])
+def get_filtered_cars():
+    filters = request.args.to_dict()
+    return car_controller.get_filtered_entities(**filters)

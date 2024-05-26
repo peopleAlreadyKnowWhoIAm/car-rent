@@ -59,7 +59,7 @@ class CarController(BasicController):
 
     def get_filtered_entities(self, **kwargs):
         cars = self.__repository.get_filtered_entities(**kwargs)
-        if not cars:
-            return Response(response="No cars found", status=HTTPStatus(404))
+        # if not cars:
+        #     return Response(response="No cars found", status=HTTPStatus(404))
         data = json.dumps([car.to_dict() for car in cars])
         return Response(response=data, status=HTTPStatus(200))

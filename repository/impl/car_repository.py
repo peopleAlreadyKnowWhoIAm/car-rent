@@ -3,7 +3,7 @@ from typing import List
 import flask_sqlalchemy
 
 from repository.basic_repository import BasicRepository
-from model.car import Car
+from model.car import Car, CarMode, CarStatus
 from constants import OperationStatus
 
 
@@ -66,24 +66,26 @@ class CarRepository(BasicRepository):
             return OperationStatus.ERROR
 
     def get_filtered_entities(self, **kwargs) -> List[Car] | None:
-
         try:
             cars = self.__db_manager.session.query(Car).all()
         except Exception as e:
             print(f"Error when getting all cars:\n{e}")
             return None
-        if "mode" in kwargs.keys():
-            cars = filter(lambda car: car.mode.lower() == kwargs["mode"].lower(), cars)
-        if "status" in kwargs.keys():
-            cars = filter(lambda car: car.status.lower() == kwargs["status"].lower(), cars)
-        if "year_min" in kwargs.keys():
-            cars = filter(lambda car: car.year >= int(kwargs["year_min"]), cars)
-        if "year_max" in kwargs.keys():
-            cars = filter(lambda car: car.year <= int(kwargs["year_max"]), cars)
-        if "price_min" in kwargs.keys():
-            cars = filter(lambda car: car.price >= int(kwargs["price_min"]), cars)
-        if "price_max" in kwargs.keys():
-            cars = filter(lambda car: car.price <= int(kwargs["price_max"]), cars)
+        if "mode" in kwargs:
+            cars = filter(lambda car: car.mode == CarMode[kwargs["mode"].upper()], cars)
+        if "status" in kwargs:
+            cars = filter(lambda car: car.status == CarStatus[kwargs["status"].upper()], cars)
+        if "year_from" in kwargs:
+            cars = filter(lambda car: car.year >= int(kwargs["year_from"]), cars)
+        if "year_to" in kwargs:
+            cars = filter(lambda car: car.year <= int(kwargs["year_to"]), cars)
+        if "price_from" in kwargs:
+            cars = filter(lambda car: car.price >= int(kwargs["price_from"]), cars)
+        if "price_to" in kwargs:
+            cars = filter(lambda car: car.price <= int(kwargs["price_to"]), cars)
+        if "search" in kwargs:
+            search_query = kwargs["search"].lower()
+            cars = filter(lambda car: search_query in car.model.lower() or search_query in car.brand.lower(), cars)
         return cars
 
     def get_most_expensive_cars(self, limit=3):
