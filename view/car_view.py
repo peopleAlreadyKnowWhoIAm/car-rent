@@ -70,9 +70,11 @@ def get_cars_report():
             report_context.set_strategy(user_report_strategy)
         elif account.privilege_level == AccountPrivilege.PRIVILEDGED:
             report_context.set_strategy(manager_report_strategy)
+        else:
+            return Response(response="No such privilege level.", status=HTTPStatus.NOT_FOUND)
         data = report_context.create_report(
             car_repository=car_repository,
-            reservation_repository=reservation_repository
+            reservation_repository=reservation_repository,
         )
         return Response(response=json.dumps(data), status=HTTPStatus.OK)
     else:

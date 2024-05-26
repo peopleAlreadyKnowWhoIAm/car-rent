@@ -10,7 +10,7 @@ class UserReportStrategy(ReportStrategy):
     def __init__(self):
         self.__status_order = {'AVAILABLE': 0, 'RESERVED': 1, 'DAMAGED': 2}
 
-    def create_report(self, car_repository: CarRepository, reservation_repository: ReservationRepository, **kwargs):
+    def create_report(self, car_repository: CarRepository, reservation_repository: ReservationRepository):
         report = {}
         reservations = reservation_repository.get_all_entities()
         reservations = list(filter(lambda reservation: reservation.status != "CANCELED", reservations))
