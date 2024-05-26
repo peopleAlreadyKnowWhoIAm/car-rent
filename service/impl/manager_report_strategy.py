@@ -123,7 +123,6 @@ class ManagerReportStrategy(ReportStrategy):
 
         df['model'] = df['car_id'].map(lambda x: " ".join([car_details[x].brand, car_details[x].model]))
         profitability = df.groupby('model')['total_profit'].sum().reset_index()
-        print(profitability)
 
         plt.figure(figsize=(10, 6))
         ax = plt.subplot()
@@ -150,7 +149,6 @@ class ManagerReportStrategy(ReportStrategy):
         # Get month names
         month_names = [calendar.month_name[i] for i in range(1, 13)]
         profit_by_month = profit_by_month.reindex(range(1, 13), fill_value=0)
-        print(profit_by_month)
 
         with sns.axes_style("darkgrid"):
             plt.figure(figsize=(10, 6))

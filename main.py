@@ -21,7 +21,7 @@ reservation_controller = ReservationController(reservation_repository=reservatio
 
 account_blueprint = create_account_blueprint(account_controller)
 car_blueprint = create_car_blueprint(car_controller, account_controller, car_repository, reservation_repository)
-reservation_blueprint = create_reservation_blueprint(reservation_controller)
+reservation_blueprint = create_reservation_blueprint(reservation_controller, account_controller)
 
 app.register_blueprint(account_blueprint)
 app.register_blueprint(car_blueprint)

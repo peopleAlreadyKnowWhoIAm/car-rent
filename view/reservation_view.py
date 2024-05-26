@@ -1,11 +1,12 @@
 import datetime
+from http import HTTPStatus
 
-from flask import Blueprint, request
+from flask import Blueprint, request, Response
 
 from model.reservation import ReservationStatus
 
 
-def create_reservation_blueprint(reservation_controller):
+def create_reservation_blueprint(reservation_controller, account_controller):
     reservation_blueprint = Blueprint('reservation_blueprint', __name__)
 
     @reservation_blueprint.route('/api/reservations', methods=['GET'])
@@ -27,7 +28,15 @@ def create_reservation_blueprint(reservation_controller):
 
     @reservation_blueprint.route('/api/reservations/users/<int:reservation_id>', methods=['GET'])
     def get_all_reservations_by_user(reservation_id):
-        return reservation_controller.get_all_entities()
+        account_creds = request.json
+        if 'email' not in account_creds or 'password' not in account_creds:
+            return Response(status=HTTPStatus.BAD_REQUEST, response="You must provide email and password for login")
+        account_check = account_controller.check_entity(email=account_creds['email'],
+                                                        password=account_creds['password'])
+        if account_check.status == HTTPStatus.OK:
+            user = account_controller.get
+        else:
+            return account_check
 
     @reservation_blueprint.route('/api/reservations/update/<int:reservation_id>', methods=['PUT'])
     def update_reservation(reservation_id):
@@ -60,7 +69,7 @@ def create_reservation_blueprint(reservation_controller):
     def fin_apym_reservation(reservation_id):
         return reservation_controller.update_entity(entity_id=reservation_id, status=ReservationStatus.COMPLETED)
 
-    @reservation_blueprint.route('/reservations/delete/<int:reservation_id>', methods=['DELETE'])
+    @reservation_blueprint.route('/api/reservations/delete/<int:reservation_id>', methods=['DELETE'])
     def delete_reservation(reservation_id):
         return reservation_controller.delete_entity(entity_id=reservation_id)
 
