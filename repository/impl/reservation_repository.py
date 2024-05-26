@@ -64,3 +64,10 @@ class ReservationRepository(BasicRepository):
         except Exception as e:
             print(f"Error when deleting reservation with id {entity_id}:\n{e}")
             return OperationStatus.ERROR
+
+    def get_entities_by_account_id(self, account_id):
+        try:
+            return self.__db_manager.session.query(Reservation).filter(Reservation.user_id == account_id).all()
+        except Exception as e:
+            print(f"Error when getting all reservations for user with ID {account_id}:\n{e}")
+            return None
