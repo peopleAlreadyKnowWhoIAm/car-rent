@@ -51,6 +51,6 @@ class ReservationController(BasicController):
         reservations = self.__repository.get_entities_by_account_id(account_id=account_id)
         return {"response": reservations, "status": 200}
 
-    def get_ongoing_reservation_by_car_id(self, car_id: int) -> Dict:
-        reservations = self.__repository.get_ongoing_reservation_by_car_id(car_id)
+    def get_ongoing_reservations_by_car_id(self, car_id: int) -> Dict:
+        reservations = self.__repository.get_ongoing_reservations_by_car_id(car_id)
         return {"response": reservations, "status": 200}

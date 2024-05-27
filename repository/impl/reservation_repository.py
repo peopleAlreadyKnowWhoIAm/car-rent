@@ -72,7 +72,7 @@ class ReservationRepository(BasicRepository):
             print(f"Error when getting all reservations for user with ID {account_id}:\n{e}")
             return None
 
-    def get_ongoing_reservation_by_car_id(self, car_id: int) -> List[Reservation] | None:
+    def get_ongoing_reservations_by_car_id(self, car_id: int) -> List[Reservation] | None:
         try:
             return self.__db_manager.session.query(Reservation).filter(Reservation.car_id == car_id,
                                                                        Reservation.status not in [

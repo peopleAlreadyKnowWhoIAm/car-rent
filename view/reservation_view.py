@@ -30,13 +30,18 @@ def create_reservation_blueprint(reservation_controller: ReservationController, 
     @reservation_blueprint.route('/api/reservations/add', methods=['POST'])
     def add_reservation():
         reservation_data = request.json
-        reservation_data['start_date'] = datetime.date.fromisoformat(reservation_data['start_date'])
-        reservation_data['end_date'] = datetime.date.fromisoformat(reservation_data['end_date'])
+        reservation_data['start_date'] = datetime.datetime.fromisoformat(reservation_data['start_date'])
+        reservation_data['end_date'] = datetime.datetime.fromisoformat(reservation_data['end_date'])
         reservation_data['expected_profit'] = (reservation_data['end_date'] - reservation_data['start_date']).days * 30
         reservation_data['money_status'] = reservation_data['expected_profit'] + 300
-        ongoing_reservation = reservation_controller.get_ongoing_reservation_by_car_id(reservation_data["car_id"])
-        print(ongoing_reservation)
-
+        result = reservation_controller.get_ongoing_reservations_by_car_id(reservation_data["car_id"])
+        if result is not None:
+            ongoing_reservations = result["response"]
+            for ongoing_reservation in ongoing_reservations:
+                if ((ongoing_reservation.end_date >= reservation_data["end_date"] >= ongoing_reservation.start_date) or
+                    (ongoing_reservation.end_date >= reservation_data["start_date"] >= ongoing_reservation.start_date) or
+                    (ongoing_reservation.end_date <= reservation_data["end_date"] and ongoing_reservation.start_date >= reservation_data["start_date"])):
+                    return Response(response="Already reserved for these dates.", status=HTTPStatus(409))
         result = reservation_controller.add_entity(**reservation_data)
         return Response(response=result["response"], status=HTTPStatus(result["status"]))
 
