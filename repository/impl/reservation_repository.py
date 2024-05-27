@@ -75,10 +75,9 @@ class ReservationRepository(BasicRepository):
     def get_ongoing_reservations_by_car_id(self, car_id: int) -> List[Reservation] | None:
         try:
             return self.__db_manager.session.query(Reservation).filter(Reservation.car_id == car_id,
-                                                                       Reservation.status not in [
-                                                                           ReservationStatus.CANCELED,
-                                                                           ReservationStatus.COMPLETED
-                                                                       ]).all()
+                                                                       Reservation.status != ReservationStatus.CANCELED,
+                                                                       Reservation.status != ReservationStatus.COMPLETED).all()
+
         except Exception as e:
             print(f"Error when getting all reservations for car with ID {car_id}:\n{e}")
             return None

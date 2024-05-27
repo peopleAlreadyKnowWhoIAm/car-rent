@@ -108,6 +108,7 @@ def create_reservation_blueprint(reservation_controller: ReservationController, 
     @reservation_blueprint.route('/api/reservations/cars/<int:car_id>', methods=['GET'])
     def get_all_reservations_by_car(car_id):
         result = reservation_controller.get_ongoing_reservations_by_car_id(car_id)
-        return Response(response=result["response"], status=HTTPStatus(result["status"]))
+        return Response(response=json.dumps([entity.to_dict() for entity in result["response"]]),
+                        status=HTTPStatus(result["status"]))
 
     return reservation_blueprint
