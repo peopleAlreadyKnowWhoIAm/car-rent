@@ -39,8 +39,10 @@ def create_reservation_blueprint(reservation_controller: ReservationController, 
             ongoing_reservations = result["response"]
             for ongoing_reservation in ongoing_reservations:
                 if ((ongoing_reservation.end_date >= reservation_data["end_date"] >= ongoing_reservation.start_date) or
-                    (ongoing_reservation.end_date >= reservation_data["start_date"] >= ongoing_reservation.start_date) or
-                    (ongoing_reservation.end_date <= reservation_data["end_date"] and ongoing_reservation.start_date >= reservation_data["start_date"])):
+                        (ongoing_reservation.end_date >= reservation_data[
+                            "start_date"] >= ongoing_reservation.start_date) or
+                        (ongoing_reservation.end_date <= reservation_data[
+                            "end_date"] and ongoing_reservation.start_date >= reservation_data["start_date"])):
                     return Response(response="Already reserved for these dates.", status=HTTPStatus(409))
         result = reservation_controller.add_entity(**reservation_data)
         return Response(response=result["response"], status=HTTPStatus(result["status"]))
@@ -101,6 +103,11 @@ def create_reservation_blueprint(reservation_controller: ReservationController, 
     @reservation_blueprint.route('/api/reservations/delete/<int:reservation_id>', methods=['DELETE'])
     def delete_reservation(reservation_id):
         result = reservation_controller.delete_entity(entity_id=reservation_id)
+        return Response(response=result["response"], status=HTTPStatus(result["status"]))
+
+    @reservation_blueprint.route('/api/reservations/cars/<int:car_id>', methods=['GET'])
+    def get_all_reservations_by_car(car_id):
+        result = reservation_controller.get_ongoing_reservations_by_car_id(car_id)
         return Response(response=result["response"], status=HTTPStatus(result["status"]))
 
     return reservation_blueprint
