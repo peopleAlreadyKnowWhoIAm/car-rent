@@ -34,6 +34,9 @@ def create_reservation_blueprint(reservation_controller: ReservationController, 
         reservation_data['end_date'] = datetime.date.fromisoformat(reservation_data['end_date'])
         reservation_data['expected_profit'] = (reservation_data['end_date'] - reservation_data['start_date']).days * 30
         reservation_data['money_status'] = reservation_data['expected_profit'] + 300
+        ongoing_reservation = reservation_controller.get_ongoing_reservation_by_car_id(reservation_data["car_id"])
+        print(ongoing_reservation)
+
         result = reservation_controller.add_entity(**reservation_data)
         return Response(response=result["response"], status=HTTPStatus(result["status"]))
 

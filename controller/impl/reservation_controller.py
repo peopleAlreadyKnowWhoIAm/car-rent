@@ -3,6 +3,7 @@ from typing import Dict
 from controller.basic_controller import BasicController
 from repository import ReservationRepository
 from constants import OperationStatus
+from model.reservation import ReservationStatus
 
 
 class ReservationController(BasicController):
@@ -48,4 +49,8 @@ class ReservationController(BasicController):
 
     def get_all_entities_by_account_id(self, account_id: int) -> Dict:
         reservations = self.__repository.get_entities_by_account_id(account_id=account_id)
+        return {"response": reservations, "status": 200}
+
+    def get_ongoing_reservation_by_car_id(self, car_id: int) -> Dict:
+        reservations = self.__repository.get_ongoing_reservation_by_car_id(car_id)
         return {"response": reservations, "status": 200}

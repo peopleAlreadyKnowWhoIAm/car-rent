@@ -3,7 +3,7 @@ from typing import List
 import flask_sqlalchemy
 
 from repository.basic_repository import BasicRepository
-from model.reservation import Reservation
+from model.reservation import Reservation, ReservationStatus
 from constants import OperationStatus
 
 
@@ -65,9 +65,20 @@ class ReservationRepository(BasicRepository):
             print(f"Error when deleting reservation with id {entity_id}:\n{e}")
             return OperationStatus.ERROR
 
-    def get_entities_by_account_id(self, account_id):
+    def get_entities_by_account_id(self, account_id: int) -> List[Reservation] | None:
         try:
             return self.__db_manager.session.query(Reservation).filter(Reservation.user_id == account_id).all()
         except Exception as e:
             print(f"Error when getting all reservations for user with ID {account_id}:\n{e}")
+            return None
+
+    def get_ongoing_reservation_by_car_id(self, car_id: int) -> List[Reservation] | None:
+        try:
+            return self.__db_manager.session.query(Reservation).filter(Reservation.car_id == car_id,
+                                                                       Reservation.status not in [
+                                                                           ReservationStatus.CANCELED,
+                                                                           ReservationStatus.COMPLETED
+                                                                       ]).all()
+        except Exception as e:
+            print(f"Error when getting all reservations for car with ID {car_id}:\n{e}")
             return None
