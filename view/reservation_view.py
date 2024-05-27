@@ -42,11 +42,11 @@ def create_reservation_blueprint(reservation_controller: ReservationController, 
 
     @reservation_blueprint.route('/api/reservations/users/<int:account_id>', methods=['GET'])
     def get_all_reservations_by_user(account_id):
-        account_creds = request.json
-        if 'email' not in account_creds or 'password' not in account_creds:
+        account_creds = request.headers
+        if 'X-email' not in account_creds or 'X-password' not in account_creds:
             return Response(status=HTTPStatus.BAD_REQUEST, response="You must provide email and password for login")
-        account_check = account_controller.check_entity(email=account_creds['email'],
-                                                        password=account_creds['password'])
+        account_check = account_controller.check_entity(email=account_creds['X-email'],
+                                                        password=account_creds['X-password'])
         if account_check["status"] == HTTPStatus.OK:
             result = reservation_controller.get_all_entities_by_account_id(account_id)
             return Response(response=json.dumps([entity.to_dict() for entity in result["response"]]),

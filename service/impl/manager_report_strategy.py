@@ -47,7 +47,7 @@ class ManagerReportStrategy(ReportStrategy):
             plt.xticks(rotation=30)
 
         buf = plot_to_img(plt)
-        plt.show()
+        plt.clf()
         return buf
 
     def __top_n_cars_by_reservations(self, car_repository: BasicRepository, reservations: List[Reservation], n: int):
@@ -80,7 +80,7 @@ class ManagerReportStrategy(ReportStrategy):
             plt.xticks(rotation=45)
 
         buf = plot_to_img(plt)
-        plt.show()
+        plt.clf()
         return buf
 
     def __avg_rental_duration(self, car_repository: BasicRepository, reservations: List[Reservation]):
@@ -107,7 +107,7 @@ class ManagerReportStrategy(ReportStrategy):
             plt.title('Average Rental Duration by Car Model', fontsize=14, fontweight='bold', color='black')
 
         buf = plot_to_img(plt)
-        plt.show()
+        plt.clf()
         return buf
 
     def __profitability_by_model(self, car_repository: BasicRepository, reservations: List[Reservation]):
