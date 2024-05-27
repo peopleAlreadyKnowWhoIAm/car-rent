@@ -22,10 +22,10 @@ class AccountController(BasicController):
         return {"response": account, "status": 200}
 
     def add_entity(self, **kwargs) -> Dict:
-        operation_status = self.__repository.add_entity(**kwargs)
-        if operation_status == OperationStatus.SUCCESS:
-            return {"response": "Successfully added account!", "status": 201}
-        if operation_status == OperationStatus.ERROR:
+        account_result = self.__repository.add_entity(**kwargs)
+        if account_result is not None:
+            return {"response": account_result, "status": 201}
+        else:
             return {"response": "An error occurred when adding new account. Try again later.", "status": 400}
 
     def update_entity(self, entity_id: int, **kwargs) -> Dict:
