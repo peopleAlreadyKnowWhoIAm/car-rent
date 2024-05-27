@@ -57,13 +57,13 @@ def create_car_blueprint(car_controller: CarController, account_controller: Acco
 
     @car_blueprint.route('/api/cars/report', methods=['GET'])
     def get_cars_report():
-        account_creds = request.json
-        if 'email' not in account_creds or 'password' not in account_creds:
-            return Response(status=HTTPStatus.BAD_REQUEST, response="Incorrect request body.")
-        result = account_controller.check_entity(email=account_creds['email'],
-                                                 password=account_creds['password'])
-        if result["status"] == 200:
-            account = result["response"]
+        account_creds = request.headers
+        if 'X-email' not in account_creds or 'X-password' not in account_creds:
+            return Response(status=HTTPStatus.BAD_REQUEST, response="You must provide email and password for login")
+        account_check = account_controller.check_entity(email=account_creds['X-email'],
+                                                        password=account_creds['X-password'])
+        if account_check["status"] == 200:
+            account = account_check["response"]
             if account.privilege_level == AccountPrivilege.COMMON:
                 report_context.set_strategy(user_report_strategy)
             elif account.privilege_level == AccountPrivilege.PRIVILEDGED:
@@ -76,7 +76,7 @@ def create_car_blueprint(car_controller: CarController, account_controller: Acco
             )
             return Response(response=json.dumps(data), status=HTTPStatus(200))
         else:
-            return Response(response=result["response"], status=HTTPStatus(result["status"]))
+            return Response(response=account_check["response"], status=HTTPStatus(account_check["status"]))
 
     @car_blueprint.route('/api/cars/filtered', methods=['GET'])
     def get_filtered_cars():
