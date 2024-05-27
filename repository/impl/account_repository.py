@@ -26,7 +26,7 @@ class AccountRepository(BasicRepository):
             print(f"Error when getting account with id {entity_id}:\n{e}")
             return None
 
-    def add_entity(self, **kwargs) -> OperationStatus:
+    def add_entity(self, **kwargs) -> Account | None:
         try:
             account = Account(
                 **kwargs
@@ -34,10 +34,10 @@ class AccountRepository(BasicRepository):
             print(account)
             self.__db_manager.session.add(account)
             self.__db_manager.session.commit()
-            return OperationStatus.SUCCESS
+            return account
         except Exception as e:
             print(f"Error adding account:\n{e}")
-            return OperationStatus.ERROR
+            return None
 
     def update_entity(self, entity_id: int, **kwargs) -> OperationStatus:
         account = self.__db_manager.session.get(entity=Account, ident=entity_id)

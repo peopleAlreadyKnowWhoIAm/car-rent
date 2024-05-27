@@ -19,18 +19,17 @@ def create_account_blueprint(account_controller: AccountController):
     @account_blueprint.route("/api/accounts/add", methods=["POST"])
     def add_account():
         account_data = request.json
-        try:
-            result = account_controller.add_entity(
-                first_name=account_data["first_name"],
-                last_name=account_data["last_name"],
-                password=account_data["password"],
-                email=account_data["email"],
-                city=account_data["city"],
-                phone_number=account_data["phone_number"],
-            )
-            return Response(response=result["response"], status=HTTPStatus(result["status"]))
-        except:
-            return Response(status=HTTPStatus.BAD_REQUEST, response="Wrong parameters")
+        result = account_controller.add_entity(
+            first_name=account_data["first_name"],
+            last_name=account_data["last_name"],
+            password=account_data["password"],
+            email=account_data["email"],
+            city=account_data["city"],
+            phone_number=account_data["phone_number"],
+        )
+        if result["status"] == 201:
+            return Response(response=json.dumps(result["response"].to_dict()), status=HTTPStatus(result["status"]))
+        return Response(status=HTTPStatus(result["status"]))
 
     @account_blueprint.route('/api/accounts/<int:account_id>', methods=['GET'])
     def get_account_by_id(account_id):
