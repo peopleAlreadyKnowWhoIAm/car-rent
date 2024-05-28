@@ -9,7 +9,7 @@ class ReportContext(metaclass=SingletonMeta):
     def set_strategy(self, strategy: ReportStrategy):
         self.__strategy = strategy
 
-    def create_report(self, car_repository: BasicRepository, reservation_repository: BasicRepository, **kwargs):
+    def create_report(self, car_repository: BasicRepository, reservation_repository: BasicRepository):
         if not self.__strategy:
             return None
-        return self.__strategy.create_report(car_repository, reservation_repository, **kwargs)
+        return self.__strategy.create_report(car_repository, reservation_repository)
